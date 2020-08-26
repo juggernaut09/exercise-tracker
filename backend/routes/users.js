@@ -7,11 +7,21 @@ router.route('/').get((req, res) => {
     .catch(err => res.status(400).json('Error: ' + err));
 });
 
-router.route('/:id').post((req, res) => {
+router.route('/:id').get((req, res) => {
     User.findById(req.params.id)
         .then(user => res.json(user))
         .catch(err => res.status(400).json('Error: ' + err));
 })
+
+router.route('/add').post((req, res) => {
+  const username = req.body.username;
+  const newUser = new User({username});
+
+  newUser.save()
+    .then(() => res.json('User added!'))
+    .catch(err => res.status(400).json('Error: ' + err));
+});
+
 
 router.route('/update/:id').post((req, res) => {
     User.findById(req.params.id)
@@ -22,15 +32,6 @@ router.route('/update/:id').post((req, res) => {
                 .catch(err => res.status(400).json('Error: '+ err));
         })
         .catch(err => res.status(400).json('Error: '+ err));
-});
-router.route('/add').post((req, res) => {
-  const username = req.body.username;
-
-  const newUser = new User({username});
-
-  newUser.save()
-    .then(() => res.json('User added!'))
-    .catch(err => res.status(400).json('Error: ' + err));
 });
 
 module.exports = router;
